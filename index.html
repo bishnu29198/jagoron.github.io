@@ -368,6 +368,18 @@
     .muted{ color: var(--muted); }
     .mono{ font-family: var(--mono); }
     .sr{ position:absolute; left:-9999px; }
+
+    /* Header height অনুযায়ী anchor scroll ঠিক রাখে */
+section[id]{
+  scroll-margin-top: 90px;
+}
+
+/* Smooth feel আরও consistent */
+html{
+  scroll-behavior: smooth;
+}
+
+    
   </style>
 </head>
 
