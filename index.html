@@ -1,20 +1,966 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="bn" data-theme="dark">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>My QR Website</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <main class="card">
-    <h1 id="title">Website Coming Soon</h1>
-    <p id="msg">Scan successful. This page will be updated today.</p>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0B0F17" />
+  <title>Jagoron</title>
+  <meta name="description" content="Jagoron — Wake your best self. Health, discipline, self-development & community service in Palash, Narsingdi." />
 
-    <button id="btn">Click me</button>
-    <p class="hint" id="hint"></p>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#0B0F17;
+      --panel:rgba(255,255,255,.06);
+      --panel2:rgba(255,255,255,.04);
+      --line:rgba(255,255,255,.10);
+      --text:#EAF0FF;
+      --muted:rgba(234,240,255,.72);
+      --muted2:rgba(234,240,255,.55);
+      --accent:#7CF7D4;
+      --accent2:#6EA8FF;
+      --shadow: 0 18px 40px rgba(0,0,0,.45);
+      --radius: 18px;
+      --radius2: 26px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: "Noto Sans Bengali","Inter",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    }
+
+    *{ box-sizing:border-box; }
+    html{ scroll-behavior:smooth; }
+    body{
+      margin:0;
+      font-family: var(--sans);
+      color: var(--text);
+      background:
+        radial-gradient(900px 560px at 20% -10%, rgba(110,168,255,.30), transparent 60%),
+        radial-gradient(900px 560px at 90% 10%, rgba(124,247,212,.18), transparent 60%),
+        radial-gradient(700px 520px at 50% 110%, rgba(110,168,255,.10), transparent 60%),
+        linear-gradient(180deg, var(--bg), #070A10 65%, #070A10);
+      line-height:1.55;
+    }
+
+    a{ color:inherit; text-decoration:none; }
+    .container{ width:min(1120px, calc(100% - 40px)); margin:0 auto; }
+
+    /* Topbar */
+    header{
+      position:sticky; top:0; z-index:50;
+      background: color-mix(in oklab, var(--bg) 70%, transparent);
+      backdrop-filter: blur(14px);
+      border-bottom:1px solid var(--line);
+    }
+    .nav{
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      padding:14px 0;
+    }
+
+    .brand{
+      display:flex; align-items:center; gap:12px;
+      min-width: 220px;
+    }
+    .mark{
+      width:40px; height:40px; border-radius:14px;
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+      box-shadow: var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+    .mark::after{
+      content:"";
+      position:absolute; inset:-40%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.45), transparent 40%),
+                  radial-gradient(circle at 70% 80%, rgba(255,255,255,.25), transparent 45%);
+      transform: rotate(18deg);
+    }
+    .brand .name{
+      font-weight:800;
+      letter-spacing:.2px;
+      font-size:16px;
+      line-height:1.1;
+    }
+    .brand .tag{
+      display:block;
+      font-family: var(--mono);
+      font-size:12px;
+      color: var(--muted2);
+      margin-top:3px;
+    }
+
+    nav{
+      display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+      justify-content:center;
+    }
+    nav a{
+      padding:10px 10px;
+      border-radius:12px;
+      color: var(--muted);
+      font-weight:700;
+      letter-spacing:.2px;
+      border:1px solid transparent;
+    }
+    nav a:hover{
+      background: var(--panel2);
+      border-color: var(--line);
+      color: var(--text);
+    }
+
+    .actions{
+      display:flex; align-items:center; gap:10px;
+      min-width: 220px;
+      justify-content:flex-end;
+    }
+
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:10px;
+      padding:10px 14px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background: var(--panel2);
+      color: var(--text);
+      font-weight:800;
+      cursor:pointer;
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+      user-select:none;
+      white-space:nowrap;
+    }
+    .btn:hover{ transform: translateY(-1px); border-color: color-mix(in oklab, var(--line) 70%, var(--accent2)); }
+    .btn.primary{
+      border:none;
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+      color:#06101E;
+    }
+    .btn.ghost{
+      background: transparent;
+    }
+    .btn.icon{ width:42px; height:42px; padding:0; }
+
+    .burger{ display:none; }
+    @media (max-width: 980px){
+      nav{ display:none; }
+      .burger{ display:inline-flex; }
+      .brand{ min-width:auto; }
+      .actions{ min-width:auto; }
+    }
+    .drawer{
+      display:none;
+      border-top:1px solid var(--line);
+      padding:10px 0 14px;
+    }
+    .drawer a{
+      display:block;
+      padding:12px 12px;
+      border-radius:12px;
+      color: var(--muted);
+      font-weight:800;
+      border:1px solid transparent;
+    }
+    .drawer a:hover{
+      background: var(--panel2);
+      border-color: var(--line);
+      color: var(--text);
+    }
+
+    /* Hero */
+    .hero{ padding:56px 0 18px; }
+    .hero-grid{
+      display:grid; gap:14px;
+      grid-template-columns: 1.2fr .8fr;
+      align-items:stretch;
+    }
+    @media (max-width: 980px){
+      .hero-grid{ grid-template-columns: 1fr; }
+    }
+    .panel{
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius2);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+    .hero-main{ padding:28px; }
+    .kicker{
+      display:inline-flex; align-items:center; gap:10px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background: var(--panel2);
+      color: var(--muted);
+      font-weight:800;
+      letter-spacing:.2px;
+    }
+    .dot{
+      width:9px; height:9px; border-radius:99px;
+      background: var(--accent);
+      box-shadow: 0 0 0 7px rgba(124,247,212,.14);
+    }
+    .hero h1{
+      margin:14px 0 10px;
+      font-size: clamp(32px, 4.6vw, 54px);
+      line-height:1.05;
+      letter-spacing:-.4px;
+    }
+    .hero p{
+      margin:0;
+      color: var(--muted);
+      font-size: 16px;
+      max-width: 70ch;
+    }
+    .hero-cta{
+      margin-top:18px;
+      display:flex; flex-wrap:wrap; gap:10px;
+      align-items:center;
+    }
+    .mini{
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted2);
+      margin-top:10px;
+    }
+
+    .hero-side{
+      padding:18px;
+      display:grid; gap:12px;
+      align-content:start;
+    }
+    .tile{
+      border:1px solid var(--line);
+      background: var(--panel2);
+      border-radius: var(--radius);
+      padding:16px;
+    }
+    .tile h3{ margin:0 0 6px; font-size:16px; letter-spacing:.2px; }
+    .tile p{ margin:0; color: var(--muted); font-size:14px; }
+    .chips{ display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
+    .chip{
+      padding:7px 10px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background: transparent;
+      color: var(--muted);
+      font-weight:800;
+      font-size:12px;
+    }
+
+    /* Sections */
+    section{ padding:38px 0; }
+    .section-head{
+      display:flex; justify-content:space-between; align-items:flex-end; gap:14px;
+      margin-bottom:14px;
+    }
+    .section-head h2{
+      margin:0;
+      font-size: 22px;
+      letter-spacing:.1px;
+    }
+    .section-head p{
+      margin:0;
+      color: var(--muted);
+      max-width: 78ch;
+    }
+
+    .grid-3{
+      display:grid; gap:12px;
+      grid-template-columns: repeat(3, 1fr);
+    }
+    @media (max-width: 980px){
+      .grid-3{ grid-template-columns: 1fr; }
+    }
+
+    .card{
+      padding:18px;
+      border-radius: var(--radius2);
+      border:1px solid var(--line);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    .card h3{ margin:0 0 8px; font-size:16px; }
+    .card p{ margin:0; color: var(--muted); }
+
+    .split{
+      display:grid; gap:12px;
+      grid-template-columns: 1fr 1fr;
+    }
+    @media (max-width: 980px){
+      .split{ grid-template-columns: 1fr; }
+    }
+
+    .list{
+      margin:12px 0 0;
+      padding:0;
+      list-style:none;
+      display:grid;
+      gap:10px;
+    }
+    .li{
+      padding:14px;
+      border-radius: var(--radius);
+      border:1px solid var(--line);
+      background: var(--panel2);
+    }
+    .li b{ display:block; margin-bottom:4px; letter-spacing:.1px; }
+    .li span{ color: var(--muted); }
+
+    /* Activity feed */
+    .feed{
+      display:grid;
+      gap:10px;
+      margin-top:10px;
+    }
+    .item{
+      display:flex; gap:12px; align-items:flex-start;
+      padding:14px;
+      border-radius: var(--radius2);
+      border:1px solid var(--line);
+      background: var(--panel);
+    }
+    .badge{
+      font-family: var(--mono);
+      font-size:12px;
+      padding:8px 10px;
+      border-radius: 999px;
+      border:1px solid var(--line);
+      background: var(--panel2);
+      color: var(--muted);
+      white-space:nowrap;
+    }
+    .item h4{ margin:0 0 4px; font-size:15px; }
+    .item p{ margin:0; color: var(--muted); font-size:14px; }
+    .item .meta{ margin-top:8px; color: var(--muted2); font-family: var(--mono); font-size:12px; }
+
+    /* Map */
+    .mapWrap{
+      border-radius: var(--radius2);
+      overflow:hidden;
+      border:1px solid var(--line);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    iframe{ width:100%; height:360px; border:0; display:block; }
+
+    /* Footer */
+    footer{
+      padding:28px 0 40px;
+      border-top:1px solid var(--line);
+      color: var(--muted2);
+    }
+    .foot{
+      display:flex; gap:12px; flex-wrap:wrap; justify-content:space-between; align-items:center;
+      font-family: var(--mono);
+      font-size:12px;
+    }
+    .links{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .links a{
+      padding:8px 10px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background: transparent;
+      color: var(--muted);
+    }
+    .links a:hover{ background: var(--panel2); color: var(--text); }
+
+    /* Small helper */
+    .muted{ color: var(--muted); }
+    .mono{ font-family: var(--mono); }
+    .sr{ position:absolute; left:-9999px; }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <div class="nav">
+        <a class="brand" href="#top" aria-label="Jagoron Home">
+          <span class="mark" aria-hidden="true"></span>
+          <span>
+            <span class="name">Jagoron</span>
+            <small class="tag" id="tagline">wake your best self</small>
+          </span>
+        </a>
+
+        <nav aria-label="Primary">
+          <a href="#about" data-i18n="nav_about">About</a>
+          <a href="#mission" data-i18n="nav_mission">Mission</a>
+          <a href="#principles" data-i18n="nav_principles">Principles</a>
+          <a href="#activities" data-i18n="nav_activities">Recent</a>
+          <a href="#join" data-i18n="nav_join">Join</a>
+          <a href="#contact" data-i18n="nav_contact">Contact</a>
+        </nav>
+
+        <div class="actions">
+          <button class="btn icon burger" id="burger" aria-label="Menu">☰</button>
+          <button class="btn ghost" id="langBtn" aria-label="Language toggle">BN / EN</button>
+          <a class="btn primary" href="#join" data-i18n="cta_join">Join Jagoron</a>
+        </div>
+      </div>
+
+      <div class="drawer" id="drawer" aria-label="Mobile menu">
+        <a href="#about" data-i18n="nav_about">About</a>
+        <a href="#mission" data-i18n="nav_mission">Mission</a>
+        <a href="#principles" data-i18n="nav_principles">Principles</a>
+        <a href="#activities" data-i18n="nav_activities">Recent</a>
+        <a href="#join" data-i18n="nav_join">Join</a>
+        <a href="#contact" data-i18n="nav_contact">Contact</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="top" class="container">
+    <section class="hero">
+      <div class="hero-grid">
+        <div class="panel hero-main">
+          <div class="kicker">
+            <span class="dot" aria-hidden="true"></span>
+            <span id="kickerText" data-i18n="kicker">Small steps. Big change.</span>
+          </div>
+
+          <h1 id="heroTitle" data-i18n="hero_title">
+            WAKE YOUR<br>BEST SELF
+          </h1>
+
+          <p id="heroDesc" data-i18n="hero_desc">
+            Jagoron is a Palash-based club for health, discipline, self-development, sports, and community service.
+            If you live in Palash (Narsingdi), you can be a member.
+          </p>
+
+          <div class="hero-cta">
+            <a class="btn primary" href="#join" data-i18n="cta_join">Join Jagoron</a>
+            <a class="btn" href="https://www.facebook.com/people/%E0%A6%9C%E0%A6%BE%E0%A6%97%E0%A6%B0%E0%A6%A3-Club/61573415048079/" target="_blank" rel="noopener" data-i18n="cta_facebook">Visit Facebook</a>
+            <a class="btn" href="https://docs.google.com/document/d/1bZQEjn5dpIjCL18vEXEuHyMvUWEn2cMfLdnoxaPxsJE/edit?tab=t.0#heading=h.atiyzfu6a7r4" target="_blank" rel="noopener" data-i18n="cta_rules">Read Rules</a>
+          </div>
+
+          <div class="mini" id="heroNote" data-i18n="hero_note">
+            Based in <b>Palash, Narsingdi</b>. Built for consistency, not motivation.
+          </div>
+        </div>
+
+        <aside class="panel hero-side" aria-label="Highlights">
+          <div class="tile">
+            <h3 data-i18n="tile1_title">What we do</h3>
+            <p data-i18n="tile1_desc">A focused system: habits → discipline → results. Plus real community work.</p>
+            <div class="chips">
+              <span class="chip" data-i18n="chip_health">Health</span>
+              <span class="chip" data-i18n="chip_discipline">Discipline</span>
+              <span class="chip" data-i18n="chip_sports">Sports</span>
+              <span class="chip" data-i18n="chip_service">Service</span>
+            </div>
+          </div>
+
+          <div class="tile">
+            <h3 data-i18n="tile2_title">Who can join</h3>
+            <p data-i18n="tile2_desc">Any motivated person living in Palash can apply. We keep it simple and fair.</p>
+          </div>
+
+          <div class="tile">
+            <h3 data-i18n="tile3_title">What you get</h3>
+            <p data-i18n="tile3_desc">Structure, accountability, training, events, and a better version of yourself.</p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="about">
+      <div class="section-head">
+        <h2 data-i18n="about_title">About Jagoron</h2>
+        <p data-i18n="about_desc">Not a “talk club”. We’re action-first. Clean systems, clear standards, measurable progress.</p>
+      </div>
+
+      <div class="split">
+        <div class="card">
+          <h3 data-i18n="about_card1_title">Identity</h3>
+          <p data-i18n="about_card1_desc">
+            Jagoron is a local club in Palash, Narsingdi. Our work sits at the intersection of self-development,
+            sports culture, health awareness, and community service.
+          </p>
+
+          <ul class="list" aria-label="Key points">
+            <li class="li">
+              <b data-i18n="about_k1">Focus</b>
+              <span data-i18n="about_v1">Discipline, health, learning, service.</span>
+            </li>
+            <li class="li">
+              <b data-i18n="about_k2">Method</b>
+              <span data-i18n="about_v2">Weekly routines, events, accountability.</span>
+            </li>
+            <li class="li">
+              <b data-i18n="about_k3">Community</b>
+              <span data-i18n="about_v3">Palash first. Everyone is welcome to contribute.</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3 data-i18n="about_card2_title">Quick links</h3>
+          <p class="muted" data-i18n="about_card2_desc">Keep the important stuff easy to find.</p>
+
+          <ul class="list">
+            <li class="li">
+              <b data-i18n="ql_fb">Facebook Page</b>
+              <span class="mono">
+                <a href="https://www.facebook.com/people/%E0%A6%9C%E0%A6%BE%E0%A6%97%E0%A6%B0%E0%A6%A3-Club/61573415048079/" target="_blank" rel="noopener">Open</a>
+              </span>
+            </li>
+            <li class="li">
+              <b data-i18n="ql_rules">Rules (Google Doc)</b>
+              <span class="mono">
+                <a href="https://docs.google.com/document/d/1bZQEjn5dpIjCL18vEXEuHyMvUWEn2cMfLdnoxaPxsJE/edit?tab=t.0#heading=h.atiyzfu6a7r4" target="_blank" rel="noopener">Open</a>
+              </span>
+            </li>
+            <li class="li">
+              <b data-i18n="ql_apply">Membership</b>
+              <span data-i18n="ql_apply_desc">Scroll to “Join” section below.</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="mission">
+      <div class="section-head">
+        <h2 data-i18n="mission_title">Mission</h2>
+        <p data-i18n="mission_desc">Simple mission. Strong execution. Zero drama.</p>
+      </div>
+
+      <div class="grid-3">
+        <div class="card">
+          <h3 data-i18n="m1">Build Discipline</h3>
+          <p data-i18n="m1d">We replace motivation with systems: small daily actions that compound.</p>
+        </div>
+        <div class="card">
+          <h3 data-i18n="m2">Improve Health</h3>
+          <p data-i18n="m2d">Fitness, sports culture, health awareness and practical habits.</p>
+        </div>
+        <div class="card">
+          <h3 data-i18n="m3">Serve Palash</h3>
+          <p data-i18n="m3d">Community work that actually helps: campaigns, volunteering, support programs.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="principles">
+      <div class="section-head">
+        <h2 data-i18n="principles_title">Principles</h2>
+        <p data-i18n="principles_desc">This is the “Jagoron standard”. If you want to join, read this.</p>
+      </div>
+
+      <div class="split">
+        <div class="card">
+          <h3 data-i18n="p_title">Core rules (short)</h3>
+          <ul class="list">
+            <li class="li"><b data-i18n="p1">Respect & discipline</b><span data-i18n="p1d">No disrespect, no chaos, no excuses.</span></li>
+            <li class="li"><b data-i18n="p2">Consistency</b><span data-i18n="p2d">Show up. Do the work. Repeat weekly.</span></li>
+            <li class="li"><b data-i18n="p3">No politics</b><span data-i18n="p3d">We’re here for growth and service, not fights.</span></li>
+            <li class="li"><b data-i18n="p4">Clean representation</b><span data-i18n="p4d">Members represent Jagoron by behavior.</span></li>
+          </ul>
+          <div class="mini">
+            <span data-i18n="rules_note">Full rules:</span>
+            <a class="btn" style="margin-top:10px;" href="https://docs.google.com/document/d/1bZQEjn5dpIjCL18vEXEuHyMvUWEn2cMfLdnoxaPxsJE/edit?tab=t.0#heading=h.atiyzfu6a7r4" target="_blank" rel="noopener" data-i18n="cta_rules">Read Rules</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 data-i18n="p2_title">How we run activities</h3>
+          <p class="muted" data-i18n="p2_desc">
+            Everything is organized like a project: clear goal, owner, date, checklist, and a short post-event report.
+          </p>
+          <ul class="list">
+            <li class="li"><b data-i18n="op1">Owner</b><span data-i18n="op1d">One person accountable for delivery.</span></li>
+            <li class="li"><b data-i18n="op2">Checklist</b><span data-i18n="op2d">No “last-minute panic”.</span></li>
+            <li class="li"><b data-i18n="op3">Recap</b><span data-i18n="op3d">What worked, what didn’t, what next.</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="activities">
+      <div class="section-head">
+        <h2 data-i18n="recent_title">Recent Activities</h2>
+        <p data-i18n="recent_desc">Update this section anytime. Just edit the JSON list in the script below.</p>
+      </div>
+
+      <div class="card">
+        <div class="feed" id="feed" aria-live="polite"></div>
+        <div class="mini" data-i18n="recent_tip">
+          Tip: You can add “photo link” or “Facebook post link” for each activity.
+        </div>
+      </div>
+    </section>
+
+    <section id="join">
+      <div class="section-head">
+        <h2 data-i18n="join_title">Join Jagoron</h2>
+        <p data-i18n="join_desc">Palash-এর ভিতরে যে কেউ সদস্য হতে পারবে — কিন্তু standards follow করতে হবে.</p>
+      </div>
+
+      <div class="split">
+        <div class="card">
+          <h3 data-i18n="join_req">Requirements</h3>
+          <ul class="list">
+            <li class="li"><b data-i18n="jr1">Location</b><span data-i18n="jr1d">Palash, Narsingdi (primary focus area).</span></li>
+            <li class="li"><b data-i18n="jr2">Mindset</b><span data-i18n="jr2d">Respectful, consistent, willing to learn.</span></li>
+            <li class="li"><b data-i18n="jr3">Participation</b><span data-i18n="jr3d">Join activities, support community work.</span></li>
+          </ul>
+          <div class="hero-cta">
+            <a class="btn primary" href="https://www.facebook.com/people/%E0%A6%9C%E0%A6%BE%E0%A6%97%E0%A6%B0%E0%A6%A3-Club/61573415048079/" target="_blank" rel="noopener" data-i18n="join_dm">Message on Facebook</a>
+            <a class="btn" href="https://docs.google.com/document/d/1bZQEjn5dpIjCL18vEXEuHyMvUWEn2cMfLdnoxaPxsJE/edit?tab=t.0#heading=h.atiyzfu6a7r4" target="_blank" rel="noopener" data-i18n="join_read_rules">Read Rules First</a>
+          </div>
+          <p class="mini" data-i18n="join_note">If you want the “Apply Form” button, send me your Google Form link.</p>
+        </div>
+
+        <div class="card">
+          <h3 data-i18n="map_title">Find us (Palash)</h3>
+          <p class="muted" data-i18n="map_desc">Below map centers on Palash, Narsingdi. You can replace with exact pin later.</p>
+          <div class="mapWrap" style="margin-top:12px;">
+            <iframe
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              src="https://www.google.com/maps?q=Palash%2C%20Narsingdi&z=13&output=embed"
+              title="Map: Palash, Narsingdi">
+            </iframe>
+          </div>
+          <div class="mini">
+            <span data-i18n="map_pin_tip">Want exact club pin?</span>
+            <span class="muted" data-i18n="map_pin_tip2">Send your Google Maps link and I’ll embed it.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="section-head">
+        <h2 data-i18n="contact_title">Contact</h2>
+        <p data-i18n="contact_desc">Keep it direct. No unnecessary forms unless you want them.</p>
+      </div>
+
+      <div class="grid-3">
+        <div class="card">
+          <h3 data-i18n="c1">Facebook</h3>
+          <p class="muted" data-i18n="c1d">Official page for updates, photos, announcements.</p>
+          <div style="margin-top:12px;">
+            <a class="btn" href="https://www.facebook.com/people/%E0%A6%9C%E0%A6%BE%E0%A6%97%E0%A6%B0%E0%A6%A3-Club/61573415048079/" target="_blank" rel="noopener" data-i18n="open_fb">Open Facebook</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 data-i18n="c2">Rules</h3>
+          <p class="muted" data-i18n="c2d">Read before joining. Keeps standards clear.</p>
+          <div style="margin-top:12px;">
+            <a class="btn" href="https://docs.google.com/document/d/1bZQEjn5dpIjCL18vEXEuHyMvUWEn2cMfLdnoxaPxsJE/edit?tab=t.0#heading=h.atiyzfu6a7r4" target="_blank" rel="noopener" data-i18n="open_rules">Open Rules</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 data-i18n="c3">Location</h3>
+          <p class="muted" data-i18n="c3d">Palash, Narsingdi (membership focus area).</p>
+          <div class="mini mono">Bangladesh · Narsingdi · Palash</div>
+        </div>
+      </div>
+    </section>
   </main>
 
-  <script src="script.js"></script>
+  <footer>
+    <div class="container foot">
+      <div>© <span id="year"></span> Jagoron</div>
+      <div class="links">
+        <a href="#top" data-i18n="foot_top">Top</a>
+        <a href="#activities" data-i18n="foot_recent">Recent</a>
+        <a href="https://www.facebook.com/people/%E0%A6%9C%E0%A6%BE%E0%A6%97%E0%A6%B0%E0%A6%A3-Club/61573415048079/" target="_blank" rel="noopener">Facebook</a>
+        <a href="https://docs.google.com/document/d/1bZQEjn5dpIjCL18vEXEuHyMvUWEn2cMfLdnoxaPxsJE/edit?tab=t.0#heading=h.atiyzfu6a7r4" target="_blank" rel="noopener">Rules</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ====== Mobile menu ======
+    const burger = document.getElementById("burger");
+    const drawer = document.getElementById("drawer");
+    burger?.addEventListener("click", () => {
+      const open = drawer.style.display === "block";
+      drawer.style.display = open ? "none" : "block";
+      burger.textContent = open ? "☰" : "✕";
+    });
+
+    // Close drawer on click
+    drawer?.addEventListener("click", (e) => {
+      if (e.target.tagName === "A") {
+        drawer.style.display = "none";
+        burger.textContent = "☰";
+      }
+    });
+
+    // ====== Recent Activities (EDIT THIS LIST) ======
+    // Add new activity at the top for “Recent” feel.
+    const activities = [
+      {
+        type: "Health",
+        title_bn: "ফ্রি মেডিকেল ক্যাম্প (উদাহরণ)",
+        title_en: "Free Medical Camp (Example)",
+        desc_bn: "বিনামূল্যে স্বাস্থ্য পরীক্ষা ও সচেতনতা। ছবির/পোস্ট লিংক যোগ করতে পারো।",
+        desc_en: "Free health checkup & awareness. Add photo/post link if you want.",
+        date: "2026-02-10",
+        location_bn: "পলাশ, নরসিংদী",
+        location_en: "Palash, Narsingdi",
+        link: "https://www.facebook.com/people/%E0%A6%9C%E0%A6%BE%E0%A6%97%E0%A6%B0%E0%A6%A3-Club/61573415048079/"
+      },
+      {
+        type: "Sports",
+        title_bn: "সাপ্তাহিক ফিটনেস সেশন (উদাহরণ)",
+        title_en: "Weekly Fitness Session (Example)",
+        desc_bn: "হালকা রান, ওয়ার্ম-আপ, বেসিক স্ট্রেংথ। নতুনরা আসতে পারে।",
+        desc_en: "Easy run, warm-up, basic strength. New members welcome.",
+        date: "2026-02-02",
+        location_bn: "পলাশ",
+        location_en: "Palash",
+        link: ""
+      },
+      {
+        type: "Service",
+        title_bn: "কমিউনিটি সাপোর্ট ড্রাইভ (উদাহরণ)",
+        title_en: "Community Support Drive (Example)",
+        desc_bn: "লোকালভাবে প্রয়োজনীয় সহায়তা। সব কিছু গুছানোভাবে ডেলিভারি।",
+        desc_en: "Local support initiative. Clean execution, clear accountability.",
+        date: "2026-01-20",
+        location_bn: "পলাশ",
+        location_en: "Palash",
+        link: ""
+      }
+    ];
+
+    // ====== Language system ======
+    let lang = "bn"; // default
+    const langBtn = document.getElementById("langBtn");
+
+    const dict = {
+      bn: {
+        nav_about:"About", nav_mission:"Mission", nav_principles:"Principles", nav_activities:"Recent", nav_join:"Join", nav_contact:"Contact",
+        cta_join:"Join Jagoron", cta_facebook:"Visit Facebook", cta_rules:"Read Rules",
+        kicker:"“ছোট অভ্যাসে বড় পরিবর্তন”",
+        hero_title:"WAKE YOUR<br>BEST SELF",
+        hero_desc:"Jagoron হলো পলাশ-ভিত্তিক একটি ক্লাব — স্বাস্থ্য, শৃঙ্খলা, স্ব-উন্নয়ন, খেলাধুলা ও সমাজসেবার জন্য। আপনি যদি পলাশ (নরসিংদী) এলাকায় থাকেন, সদস্য হতে পারবেন।",
+        hero_note:"Based in <b>Palash, Narsingdi</b>. Motivation নয় — system.",
+        tile1_title:"What we do",
+        tile1_desc:"একটা ফোকাসড সিস্টেম: habits → discipline → result. সাথে বাস্তব সমাজসেবা।",
+        chip_health:"Health", chip_discipline:"Discipline", chip_sports:"Sports", chip_service:"Service",
+        tile2_title:"Who can join",
+        tile2_desc:"পলাশের যেকেউ আবেদন করতে পারে। সিস্টেম সিম্পল এবং ফেয়ার।",
+        tile3_title:"What you get",
+        tile3_desc:"Structure, accountability, training, event, এবং নিজের উন্নতি।",
+
+        about_title:"About Jagoron",
+        about_desc:"এটা কথার ক্লাব না। কাজ আগে। standards পরিষ্কার। progress measurable.",
+        about_card1_title:"Identity",
+        about_card1_desc:"Jagoron পলাশ, নরসিংদী-ভিত্তিক একটি লোকাল ক্লাব। Self-development, sports culture, health awareness এবং community service একসাথে।",
+        about_k1:"Focus", about_v1:"Discipline, health, learning, service.",
+        about_k2:"Method", about_v2:"Weekly routines, events, accountability.",
+        about_k3:"Community", about_v3:"Palash first. Everyone can contribute.",
+        about_card2_title:"Quick links",
+        about_card2_desc:"যা দরকার, সেখানেই।",
+        ql_fb:"Facebook Page",
+        ql_rules:"Rules (Google Doc)",
+        ql_apply:"Membership",
+        ql_apply_desc:"নিচে “Join” সেকশনে।",
+
+        mission_title:"Mission",
+        mission_desc:"Mission সিম্পল। Execution strong. Drama zero.",
+        m1:"Build Discipline", m1d:"Motivation না — ছোট কাজের সিস্টেম।",
+        m2:"Improve Health", m2d:"Fitness, sports culture, এবং practical habit.",
+        m3:"Serve Palash", m3d:"কমিউনিটির জন্য বাস্তব কাজ।",
+
+        principles_title:"Principles",
+        principles_desc:"এটাই Jagoron standard. Join করতে চাইলে আগে এটা বোঝো।",
+        p_title:"Core rules (short)",
+        p1:"Respect & discipline", p1d:"অসম্মান/অরাজকতা/অজুহাত নয়।",
+        p2:"Consistency", p2d:"Show up. Do the work. Weekly repeat.",
+        p3:"No politics", p3d:"ঝগড়া না — growth + service.",
+        p4:"Clean representation", p4d:"আচরণ দিয়ে Jagoron represent করবে।",
+        rules_note:"Full rules:",
+        p2_title:"How we run activities",
+        p2_desc:"সবকিছু project-এর মতো: goal, owner, date, checklist, recap.",
+        op1:"Owner", op1d:"একজন accountable থাকবে।",
+        op2:"Checklist", op2d:"Last-minute panic নয়।",
+        op3:"Recap", op3d:"What worked / what didn’t / next steps.",
+
+        recent_title:"Recent Activities",
+        recent_desc:"এটা update করা খুব সহজ। Script-এ JSON list edit করলেই হবে।",
+        recent_tip:"Tip: প্রতিটা activity-তে Facebook post link যোগ করতে পারো।",
+
+        join_title:"Join Jagoron",
+        join_desc:"Palash-এর ভিতরে যে কেউ সদস্য হতে পারবে — কিন্তু standards follow করতে হবে।",
+        join_req:"Requirements",
+        jr1:"Location", jr1d:"পলাশ, নরসিংদী (primary focus).",
+        jr2:"Mindset", jr2d:"Respectful, consistent, learning attitude.",
+        jr3:"Participation", jr3d:"Activity + community work support.",
+        join_dm:"Message on Facebook",
+        join_read_rules:"Read Rules First",
+        join_note:"Apply Form বাটন চাইলে Google Form link দাও।",
+
+        map_title:"Find us (Palash)",
+        map_desc:"Mapটি Palash, Narsingdi কেন্দ্রে। পরে exact pin বসাবো।",
+        map_pin_tip:"Exact club pin চাইলে:",
+        map_pin_tip2:"Google Maps link পাঠাও।",
+
+        contact_title:"Contact",
+        contact_desc:"Direct রাখো। দরকার না হলে বড় form নয়।",
+        c1:"Facebook", c1d:"Update, photo, announcement এখানেই।",
+        open_fb:"Open Facebook",
+        c2:"Rules", c2d:"Join করার আগে পড়া বাধ্যতামূলক।",
+        open_rules:"Open Rules",
+        c3:"Location", c3d:"Palash, Narsingdi (membership focus).",
+
+        foot_top:"Top",
+        foot_recent:"Recent"
+      },
+      en: {
+        nav_about:"About", nav_mission:"Mission", nav_principles:"Principles", nav_activities:"Recent", nav_join:"Join", nav_contact:"Contact",
+        cta_join:"Join Jagoron", cta_facebook:"Visit Facebook", cta_rules:"Read Rules",
+        kicker:"Small steps. Big change.",
+        hero_title:"WAKE YOUR<br>BEST SELF",
+        hero_desc:"Jagoron is a Palash-based club focused on health, discipline, self-development, sports, and community service. If you live in Palash (Narsingdi), you can be a member.",
+        hero_note:"Based in <b>Palash, Narsingdi</b>. Built on systems, not motivation.",
+        tile1_title:"What we do",
+        tile1_desc:"A focused system: habits → discipline → results. Plus real community work.",
+        chip_health:"Health", chip_discipline:"Discipline", chip_sports:"Sports", chip_service:"Service",
+        tile2_title:"Who can join",
+        tile2_desc:"Anyone living in Palash can apply. Simple process. Fair standards.",
+        tile3_title:"What you get",
+        tile3_desc:"Structure, accountability, training, events, and growth.",
+
+        about_title:"About Jagoron",
+        about_desc:"Not a talk club. Action-first. Clear standards. Measurable progress.",
+        about_card1_title:"Identity",
+        about_card1_desc:"Jagoron is a local club in Palash, Narsingdi. We combine self-development, sports culture, health awareness and community service.",
+        about_k1:"Focus", about_v1:"Discipline, health, learning, service.",
+        about_k2:"Method", about_v2:"Weekly routines, events, accountability.",
+        about_k3:"Community", about_v3:"Palash first. Everyone can contribute.",
+        about_card2_title:"Quick links",
+        about_card2_desc:"Keep the important stuff easy to find.",
+        ql_fb:"Facebook Page",
+        ql_rules:"Rules (Google Doc)",
+        ql_apply:"Membership",
+        ql_apply_desc:"See the “Join” section below.",
+
+        mission_title:"Mission",
+        mission_desc:"Simple mission. Strong execution. Zero drama.",
+        m1:"Build Discipline", m1d:"Replace motivation with systems and habits.",
+        m2:"Improve Health", m2d:"Fitness, sports culture, and practical health habits.",
+        m3:"Serve Palash", m3d:"Community work that actually helps.",
+
+        principles_title:"Principles",
+        principles_desc:"This is the Jagoron standard. Read this before joining.",
+        p_title:"Core rules (short)",
+        p1:"Respect & discipline", p1d:"No disrespect, no chaos, no excuses.",
+        p2:"Consistency", p2d:"Show up. Do the work. Repeat weekly.",
+        p3:"No politics", p3d:"Growth and service only.",
+        p4:"Clean representation", p4d:"Members represent Jagoron by behavior.",
+        rules_note:"Full rules:",
+        p2_title:"How we run activities",
+        p2_desc:"We operate like a project: goal, owner, date, checklist, recap.",
+        op1:"Owner", op1d:"One person accountable for delivery.",
+        op2:"Checklist", op2d:"No last-minute panic.",
+        op3:"Recap", op3d:"What worked, what didn’t, next steps.",
+
+        recent_title:"Recent Activities",
+        recent_desc:"Easy to update: edit the JSON list inside the script.",
+        recent_tip:"Tip: Add Facebook post links per activity.",
+
+        join_title:"Join Jagoron",
+        join_desc:"Anyone inside Palash can apply, but standards are non-negotiable.",
+        join_req:"Requirements",
+        jr1:"Location", jr1d:"Palash, Narsingdi (primary focus area).",
+        jr2:"Mindset", jr2d:"Respectful, consistent, willing to learn.",
+        jr3:"Participation", jr3d:"Join activities and support community work.",
+        join_dm:"Message on Facebook",
+        join_read_rules:"Read Rules First",
+        join_note:"If you want an Apply Form button, send your Google Form link.",
+
+        map_title:"Find us (Palash)",
+        map_desc:"This map centers on Palash, Narsingdi. Replace with exact pin later.",
+        map_pin_tip:"Want exact club pin?",
+        map_pin_tip2:"Send your Google Maps link and I’ll embed it.",
+
+        contact_title:"Contact",
+        contact_desc:"Keep it direct. No heavy forms unless needed.",
+        c1:"Facebook", c1d:"Updates, photos, announcements.",
+        open_fb:"Open Facebook",
+        c2:"Rules", c2d:"Read before joining. Keeps standards clear.",
+        open_rules:"Open Rules",
+        c3:"Location", c3d:"Palash, Narsingdi (membership focus).",
+
+        foot_top:"Top",
+        foot_recent:"Recent"
+      }
+    };
+
+    function applyI18n(){
+      document.documentElement.lang = lang === "bn" ? "bn" : "en";
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        const val = dict[lang][key];
+        if (!val) return;
+        el.innerHTML = val;
+      });
+      renderFeed();
+    }
+
+    langBtn?.addEventListener("click", () => {
+      lang = (lang === "bn") ? "en" : "bn";
+      applyI18n();
+    });
+
+    // ====== Render activity feed ======
+    function escapeHtml(s){
+      return String(s).replace(/[&<>"']/g, m => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+      })[m]);
+    }
+
+    function formatDate(iso){
+      // Keep it simple; you can customize.
+      return iso;
+    }
+
+    function renderFeed(){
+      const feed = document.getElementById("feed");
+      if (!feed) return;
+
+      // Sort by date desc
+      const sorted = [...activities].sort((a,b) => (b.date || "").localeCompare(a.date || ""));
+      feed.innerHTML = "";
+
+      sorted.forEach(a => {
+        const title = lang === "bn" ? a.title_bn : a.title_en;
+        const desc = lang === "bn" ? a.desc_bn : a.desc_en;
+        const loc  = lang === "bn" ? a.location_bn : a.location_en;
+
+        const linkPart = a.link
+          ? `<div class="meta"><a href="${escapeHtml(a.link)}" target="_blank" rel="noopener">Link</a></div>`
+          : `<div class="meta">${escapeHtml(loc)} · ${escapeHtml(formatDate(a.date || ""))}</div>`;
+
+        const metaLine = a.link
+          ? `<div class="meta">${escapeHtml(loc)} · ${escapeHtml(formatDate(a.date || ""))} · <a href="${escapeHtml(a.link)}" target="_blank" rel="noopener">Open</a></div>`
+          : `<div class="meta">${escapeHtml(loc)} · ${escapeHtml(formatDate(a.date || ""))}</div>`;
+
+        const item = document.createElement("div");
+        item.className = "item";
+        item.innerHTML = `
+          <div class="badge">${escapeHtml(a.type || "Update")}</div>
+          <div>
+            <h4>${escapeHtml(title || "")}</h4>
+            <p>${escapeHtml(desc || "")}</p>
+            ${metaLine}
+          </div>
+        `;
+        feed.appendChild(item);
+      });
+    }
+
+    // ====== Init ======
+    document.getElementById("year").textContent = new Date().getFullYear();
+    applyI18n();
+  </script>
 </body>
 </html>
