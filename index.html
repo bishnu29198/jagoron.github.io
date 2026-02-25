@@ -970,6 +970,32 @@ html{
     // ====== Init ======
     document.getElementById("year").textContent = new Date().getFullYear();
     applyI18n();
+
+    // ====== Smooth navigation + preserve default anchor behavior ======
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener("click", (e) => {
+    const id = a.getAttribute("href");
+    if (!id || id === "#") return;
+
+    const el = document.querySelector(id);
+    if (!el) return;
+
+    e.preventDefault();
+    history.pushState(null, "", id);
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+});
+
+// ====== Back/forward করলে ঠিক জায়গায় scroll হবে ======
+window.addEventListener("popstate", () => {
+  const id = location.hash;
+  if (!id) return;
+  const el = document.querySelector(id);
+  if (!el) return;
+  el.scrollIntoView({ behavior: "smooth", block: "start" });
+});
+
+    
   </script>
 </body>
 </html>
